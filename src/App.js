@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from 'yup';
 import "./App.css";
+
+const schema = yup.object().shape({
+  TaskUid: yup.string().required(),
+  Identifier: yup.string().required()
+})
 
 const TextInput = ({ name, placeholder }) => {
   return (
     <label className="block mt-2">
-      <span className="text-gray-700">{name}</span>
+      <span className="text-gray-700 font-semibold">{name}</span>
       <Field
         className="form-input mt-1 block w-full"
         name={name}
@@ -17,6 +23,8 @@ const TextInput = ({ name, placeholder }) => {
 };
 
 function App() {
+  const [jsonTask, setJsonTask] = useState("null");
+
   return (
     <div>
       <header className="text-center text-4xl font-bold">tsqlScheduler Task Creator</header>
@@ -30,11 +38,10 @@ function App() {
             const errors = {};
             return errors;
           }}
+          validationSchema={schema}
           onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 400);
+            setJsonTask(JSON.stringify(values, null, 2));
+            setSubmitting(false);
           }}
         >
           {({ isSubmitting }) => (
@@ -52,12 +59,15 @@ function App() {
 
               <TextInput name="Identifier" placeholder="Task name" />
 
-              <button type="submit" className="mt-6 bg-blue-400 text-white hover:bg-blue-600 py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={isSubmitting}>
-                Submit
+              <button type="submit" className="mt-4 bg-blue-400 text-white hover:bg-blue-600 py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={isSubmitting}>
+                Create JSON
               </button>
             </Form>
           )}
         </Formik>
+        {jsonTask && <div className="mt-4">
+          <textarea className="form-textarea block w-full mb-2" rows={5} value={jsonTask} readOnly />
+        </div>}
       </div>
     </div>
   );

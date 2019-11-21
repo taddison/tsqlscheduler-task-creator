@@ -1,3 +1,8 @@
+- Validation with yup - https://github.com/jquense/yup
+- Formik for forms - https://jaredpalmer.com/formik/docs/overview
+- Tailwind forms - https://tailwindcss-custom-forms.netlify.com/
+- Tailwind - https://tailwindcss.com/
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
