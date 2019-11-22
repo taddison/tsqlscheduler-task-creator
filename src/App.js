@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from 'yup';
-import "./App.css";
+import "./styles/App.out.css";
 
 const schema = yup.object().shape({
   TaskUid: yup.string().required(),
