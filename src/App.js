@@ -27,7 +27,8 @@ const schema = yup.object().shape({
   NotifyLevelEventLog: yup.string().required()
 });
 
-const TextInput = ({ name, placeholder, button }) => {
+const TextInput = ({ name, placeholder, generateNewValue }) => {
+  const { setFieldValue } = useFormikContext();
   return (
     <label className="block mb-2">
       <span className="text-gray-700 font-semibold">{name}</span>
@@ -36,7 +37,17 @@ const TextInput = ({ name, placeholder, button }) => {
         name={name}
         placeholder={placeholder}
       />
-      {button}
+      {generateNewValue && (
+        <button
+          className="mt-2 bg-gray-200 text-gray-800 hover:bg-gray-400 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          onClick={e => {
+            e.preventDefault();
+            setFieldValue(name, generateNewValue());
+          }}
+        >
+          Generate TaskUid
+        </button>
+      )}
       <ErrorMessage
         name={name}
         component="div"
@@ -44,23 +55,6 @@ const TextInput = ({ name, placeholder, button }) => {
       />
     </label>
   );
-};
-
-const GuidInput = props => {
-  const { setFieldValue } = useFormikContext();
-  const button = (
-    <button
-      className="mt-2 bg-gray-200 text-gray-800 hover:bg-gray-400 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      onClick={e => {
-        e.preventDefault();
-        setFieldValue("TaskUid", uuidv4());
-      }}
-    >
-      Generate TaskUid
-    </button>
-  );
-
-  return <TextInput {...props} button={button} />;
 };
 
 function App() {
@@ -94,9 +88,10 @@ function App() {
         >
           {({ isSubmitting }) => (
             <Form>
-              <GuidInput
+              <TextInput
                 name="TaskUid"
                 placeholder="00000000-0000-0000-0000-000000000000"
+                generateNewValue={() => uuidv4()}
               />
 
               <TextInput name="Identifier" placeholder="Task name" />
