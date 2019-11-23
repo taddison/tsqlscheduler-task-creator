@@ -3,10 +3,26 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import "./styles/App.out.css";
 
+// https://stackoverflow.com/a/2117523
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+
 const schema = yup.object().shape({
   TaskUid: yup.string().required(),
   Identifier: yup.string().required(),
-  TSQLCommand: yup.string().required()
+  TSQLCommand: yup.string().required(),
+  StartTime: yup.string().required(),
+  Frequency: yup.string().required(),
+  FrequencyInterval: yup.string().required(),
+  NotifyOnFailureOperator: yup.string().required(),
+  IsNotifyOnFailure: yup.string().required(),
+  IsDeleted: yup.string().required(),
+  IsEnabled: yup.string().required(),
+  NotifyLevelEventLog: yup.string().required(),
 });
 
 const TextInput = ({ name, placeholder }) => {
@@ -62,9 +78,9 @@ function App() {
       <div className="max-w-xl mx-auto mt-2 px-4 py-2 bg-gray-100 shadow-xl">
         <Formik
           initialValues={{
-            TaskUid: "",
+            TaskUid: uuidv4(),
             Identifier: "",
-            TSQLCommand: "",
+            TSQLCommand: ""
           }}
           validate={values => {
             const errors = {};
@@ -88,6 +104,14 @@ function App() {
                 name="TSQLCommand"
                 placeholder="exec db.schema.proc;"
               />
+              <TextInput name="StartTime" placeholder="Task name" />
+              <TextInput name="Frequency" placeholder="Task name" />
+              <TextInput name="FrequencyInterval" placeholder="Task name" />
+              <TextInput name="NotifyOnFailureOperator" placeholder="Task name" />
+              <TextInput name="IsNotifyOnFailure" placeholder="Task name" />
+              <TextInput name="IsDeleted" placeholder="Task name" />
+              <TextInput name="IsEnabled" placeholder="Task name" />
+              <TextInput name="NotifyLevelEventLog" placeholder="Task name" />
 
               <button
                 type="submit"
