@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
+import { Formik, Form, Field, ErrorMessage, useFormikContext, useField } from "formik";
 import * as yup from "yup";
 import "./styles/App.out.css";
 
@@ -41,7 +41,7 @@ const TextInput = ({
         className="form-input mt-1 block w-full"
         name={name}
         placeholder={placeholder}
-        autocomplete={autocomplete}
+        autoComplete={autocomplete}
       />
       {generateNewValue && (
         <button
@@ -65,10 +65,30 @@ const TextInput = ({
 
 const CheckboxInput = ({ name, label }) => {
   return (
+    <label className="flex items-center mt-1">
+      <Field type="checkbox" name={name} className="form-checkbox" />
+      <span className="text-gray-700 font-semibold ml-2 ">{label}</span>
+      <ErrorMessage
+        name={name}
+        component="div"
+        className="text-red-800 italic"
+      />
+    </label>
+  );
+};
+
+const DropdownInput = ({ name, values }) => {
+  const [field, ] = useField(name);
+  console.log(field)
+  return (
     <div>
-      <label className="flex items-center ml-2 mt-1">
-        <Field type="checkbox" name={name} className="form-checkbox" />
-        <span className="text-gray-700 font-semibold ml-2 ">{label}</span>
+      <span className="text-gray-700 font-semibold">{name}</span>
+      <label className="mt-1">
+        <Field name={name} as="select" className="form-select block w-full">
+          {values.map(value => {
+            return <option key={value} value={value}>{value}</option>;
+          })}
+        </Field>
         <ErrorMessage
           name={name}
           component="div"
@@ -78,6 +98,15 @@ const CheckboxInput = ({ name, label }) => {
     </div>
   );
 };
+
+const FrequencyInput = () => {
+  const { values } = useFormikContext();
+  if(values.Frequency === "Day") {
+    return <></>
+  } else {
+    return <TextInput name="FrequencyInterval" placeholder="0, 1, 2..." />
+  }
+}
 
 function App() {
   const [jsonTask, setJsonTask] = useState(null);
@@ -103,6 +132,13 @@ function App() {
             NotifyLevelEventLog: "OnFailure"
           }}
           validationSchema={schema}
+          validate={values => {
+            const errors = {};
+            if(values.Frequency !== "Day" && values.FrequencyInterval === 0) {
+              errors.FrequencyInterval = 'Interval must be greater than 0';
+            }
+            return errors;
+          }}
           onSubmit={(values, { setSubmitting }) => {
             setJsonTask(JSON.stringify(values, null, 2));
             setSubmitting(false);
@@ -121,17 +157,18 @@ function App() {
                 placeholder="exec db.schema.proc;"
               />
               <TextInput name="StartTime" placeholder="00:00:00" />
-              <TextInput
+              <DropdownInput
                 name="Frequency"
-                placeholder="Day, Hour, Minute, Second"
+                values={["Day", "Hour", "Minute", "Second"]}
               />
-              <TextInput name="FrequencyInterval" placeholder="0, 1, 2..." />
+              <FrequencyInput/>
               <TextInput
                 name="NotifyOnFailureOperator"
                 placeholder="Task name"
-                autocomplete="on"
+                autoComplete="on"
               />
-              <TextInput name="NotifyLevelEventLog" placeholder="Task name" />
+              <DropdownInput name="NotifyLevelEventLog"
+                values={["Always", "OnSuccess", "OnFailure", "Never"]}/>
               <CheckboxInput
                 name="IsNotifyOnFailure"
                 label="Notify on failure?"
