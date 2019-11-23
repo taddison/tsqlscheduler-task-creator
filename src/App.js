@@ -24,10 +24,15 @@ const schema = yup.object().shape({
   NotifyLevelEventLog: yup.string().required(),
   IsNotifyOnFailure: yup.boolean().required(),
   IsDeleted: yup.boolean().required(),
-  IsEnabled: yup.boolean().required(),
+  IsEnabled: yup.boolean().required()
 });
 
-const TextInput = ({ name, placeholder, generateNewValue, autocomplete="off" }) => {
+const TextInput = ({
+  name,
+  placeholder,
+  generateNewValue,
+  autocomplete = "off"
+}) => {
   const { setFieldValue } = useFormikContext();
   return (
     <label className="block mb-2">
@@ -58,6 +63,22 @@ const TextInput = ({ name, placeholder, generateNewValue, autocomplete="off" }) 
   );
 };
 
+const CheckboxInput = ({ name, label }) => {
+  return (
+    <div>
+      <label className="flex items-center ml-2 mt-1">
+        <Field type="checkbox" name={name} className="form-checkbox" />
+        <span className="text-gray-700 font-semibold ml-2 ">{label}</span>
+        <ErrorMessage
+          name={name}
+          component="div"
+          className="text-red-800 italic"
+        />
+      </label>
+    </div>
+  );
+};
+
 function App() {
   const [jsonTask, setJsonTask] = useState(null);
 
@@ -78,7 +99,7 @@ function App() {
             NotifyOnFailureOperator: "",
             IsNotifyOnFailure: true,
             IsDeleted: false,
-            IsEnabled: false,
+            IsEnabled: true,
             NotifyLevelEventLog: "OnFailure"
           }}
           validationSchema={schema}
@@ -100,17 +121,23 @@ function App() {
                 placeholder="exec db.schema.proc;"
               />
               <TextInput name="StartTime" placeholder="00:00:00" />
-              <TextInput name="Frequency" placeholder="Day, Hour, Minute, Second" />
+              <TextInput
+                name="Frequency"
+                placeholder="Day, Hour, Minute, Second"
+              />
               <TextInput name="FrequencyInterval" placeholder="0, 1, 2..." />
               <TextInput
                 name="NotifyOnFailureOperator"
                 placeholder="Task name"
                 autocomplete="on"
               />
-              <TextInput name="IsNotifyOnFailure" placeholder="Task name" />
-              <TextInput name="IsDeleted" placeholder="Task name" />
-              <TextInput name="IsEnabled" placeholder="Task name" />
               <TextInput name="NotifyLevelEventLog" placeholder="Task name" />
+              <CheckboxInput
+                name="IsNotifyOnFailure"
+                label="Notify on failure?"
+              />
+              <CheckboxInput name="IsDeleted" label="Deleted?" />
+              <CheckboxInput name="IsEnabled" label="Enabled?" />
               <button
                 type="submit"
                 className="my-2 bg-blue-400 text-white hover:bg-blue-600 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
