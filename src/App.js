@@ -19,12 +19,12 @@ const schema = yup.object().shape({
   TSQLCommand: yup.string().required(),
   StartTime: yup.string().required(),
   Frequency: yup.string().required(),
-  FrequencyInterval: yup.string().required(),
+  FrequencyInterval: yup.number().required(),
   NotifyOnFailureOperator: yup.string().required(),
-  IsNotifyOnFailure: yup.string().required(),
-  IsDeleted: yup.string().required(),
-  IsEnabled: yup.string().required(),
-  NotifyLevelEventLog: yup.string().required()
+  NotifyLevelEventLog: yup.string().required(),
+  IsNotifyOnFailure: yup.boolean().required(),
+  IsDeleted: yup.boolean().required(),
+  IsEnabled: yup.boolean().required(),
 });
 
 const TextInput = ({ name, placeholder, generateNewValue }) => {
@@ -73,11 +73,11 @@ function App() {
             TSQLCommand: "",
             StartTime: "00:00:00",
             Frequency: "Day",
-            FrequencyInterval: "0",
+            FrequencyInterval: 0,
             NotifyOnFailureOperator: "",
-            IsNotifyOnFailure: "true",
-            IsDeleted: "false",
-            IsEnabled: "false",
+            IsNotifyOnFailure: true,
+            IsDeleted: false,
+            IsEnabled: false,
             NotifyLevelEventLog: "OnFailure"
           }}
           validationSchema={schema}
