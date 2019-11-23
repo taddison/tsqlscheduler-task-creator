@@ -27,7 +27,7 @@ const schema = yup.object().shape({
   IsEnabled: yup.boolean().required(),
 });
 
-const TextInput = ({ name, placeholder, generateNewValue }) => {
+const TextInput = ({ name, placeholder, generateNewValue, autocomplete="off" }) => {
   const { setFieldValue } = useFormikContext();
   return (
     <label className="block mb-2">
@@ -36,6 +36,7 @@ const TextInput = ({ name, placeholder, generateNewValue }) => {
         className="form-input mt-1 block w-full"
         name={name}
         placeholder={placeholder}
+        autocomplete={autocomplete}
       />
       {generateNewValue && (
         <button
@@ -93,24 +94,23 @@ function App() {
                 placeholder="00000000-0000-0000-0000-000000000000"
                 generateNewValue={() => uuidv4()}
               />
-
               <TextInput name="Identifier" placeholder="Task name" />
               <TextInput
                 name="TSQLCommand"
                 placeholder="exec db.schema.proc;"
               />
-              <TextInput name="StartTime" placeholder="Task name" />
-              <TextInput name="Frequency" placeholder="Task name" />
-              <TextInput name="FrequencyInterval" placeholder="Task name" />
+              <TextInput name="StartTime" placeholder="00:00:00" />
+              <TextInput name="Frequency" placeholder="Day, Hour, Minute, Second" />
+              <TextInput name="FrequencyInterval" placeholder="0, 1, 2..." />
               <TextInput
                 name="NotifyOnFailureOperator"
                 placeholder="Task name"
+                autocomplete="on"
               />
               <TextInput name="IsNotifyOnFailure" placeholder="Task name" />
               <TextInput name="IsDeleted" placeholder="Task name" />
               <TextInput name="IsEnabled" placeholder="Task name" />
               <TextInput name="NotifyLevelEventLog" placeholder="Task name" />
-
               <button
                 type="submit"
                 className="my-2 bg-blue-400 text-white hover:bg-blue-600 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
