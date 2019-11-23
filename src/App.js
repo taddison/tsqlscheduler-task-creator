@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
 import * as yup from "yup";
 import "./styles/App.out.css";
 
@@ -9,7 +9,6 @@ function uuidv4() {
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
 }
-
 
 const schema = yup.object().shape({
   TaskUid: yup.string().required(),
@@ -44,6 +43,7 @@ const TextInput = ({ name, placeholder }) => {
 };
 
 const GuidInput = ({ name, placeholder }) => {
+  const { setFieldValue } = useFormikContext();
   return (
     <label className="block mb-2">
       <span className="text-gray-700 font-semibold">{name}</span>
@@ -54,7 +54,10 @@ const GuidInput = ({ name, placeholder }) => {
       />
       <button
         className="mt-2 bg-gray-200 text-gray-800 hover:bg-gray-400 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        onClick={e => e.preventDefault()}
+        onClick={e => {
+          e.preventDefault()
+          setFieldValue("TaskUid", uuidv4())
+        }}
       >
         Generate TaskUid
       </button>
