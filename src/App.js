@@ -113,6 +113,7 @@ function App() {
                 </button>
                 {jsonTask && (
                   <button
+                    type="button"
                     onClick={(e) => {
                       e.preventDefault();
                       jsonTextArea.current.select();

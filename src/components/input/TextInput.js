@@ -40,6 +40,7 @@ export default ({
               e.preventDefault();
               setFieldValue(name, generateNewValue());
             }}
+            type="button"
           >
             {refreshSvg()}
           </button>
