@@ -4,14 +4,14 @@ import {
   FrequencyInput,
   TextInput,
   CheckboxInput,
-  DropdownInput
+  DropdownInput,
 } from "./components/input";
 import * as yup from "yup";
 import "./styles/App.out.css";
 
 // https://stackoverflow.com/a/2117523
 function uuidv4() {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
     (
       c ^
       (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
@@ -30,12 +30,31 @@ const schema = yup.object().shape({
   NotifyLevelEventLog: yup.string().required(),
   IsNotifyOnFailure: yup.boolean().required(),
   IsDeleted: yup.boolean().required(),
-  IsEnabled: yup.boolean().required()
+  IsEnabled: yup.boolean().required(),
 });
 
 function App() {
   const [jsonTask, setJsonTask] = useState(null);
+  const [sqlStatement, setSqlStatement] = useState(null);
+  const sqlTextArea = useRef(null);
   const jsonTextArea = useRef(null);
+
+  const buildSql = (values) => {
+    const {
+      TaskUid,
+      Identifier,
+      TSQLCommand,
+      StartTime,
+      Frequency,
+      FrequencyInterval,
+      NotifyOnFailureOperator,
+      IsNotifyOnFailure,
+      IsDeleted,
+      IsEnabled,
+      NotifyLevelEventLog,
+    } = values;
+    return `select '${TaskUid}' as TaskUid`;
+  };
 
   return (
     <div>
@@ -55,10 +74,10 @@ function App() {
             IsNotifyOnFailure: true,
             IsDeleted: false,
             IsEnabled: true,
-            NotifyLevelEventLog: "OnFailure"
+            NotifyLevelEventLog: "OnFailure",
           }}
           validationSchema={schema}
-          validate={values => {
+          validate={(values) => {
             const errors = {};
             if (values.Frequency !== "Day" && values.FrequencyInterval === 0) {
               errors.FrequencyInterval = "Interval must be greater than 0";
@@ -67,6 +86,7 @@ function App() {
           }}
           onSubmit={(values, { setSubmitting }) => {
             setJsonTask(JSON.stringify(values, null, 2));
+            setSqlStatement(buildSql(values));
             setSubmitting(false);
           }}
         >
@@ -121,7 +141,20 @@ function App() {
                     }}
                     className="ml-3 my-2 bg-blue-400 text-white hover:bg-blue-600 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
-                    Copy to clipboard
+                    Copy JSON
+                  </button>
+                )}
+                {sqlStatement && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      sqlTextArea.current.select();
+                      document.execCommand("copy");
+                    }}
+                    className="ml-3 my-2 bg-blue-400 text-white hover:bg-blue-600 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Copy SQL
                   </button>
                 )}
               </div>
@@ -136,6 +169,17 @@ function App() {
               value={jsonTask}
               readOnly
               ref={jsonTextArea}
+            />
+          </div>
+        )}
+        {sqlStatement && (
+          <div className="mt-4">
+            <textarea
+              className="form-textarea block w-full mb-2"
+              rows={13}
+              value={sqlStatement}
+              readOnly
+              ref={sqlTextArea}
             />
           </div>
         )}
