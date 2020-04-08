@@ -53,10 +53,7 @@ function App() {
       IsEnabled,
       NotifyLevelEventLog,
     } = values;
-      return `
-
- 
-
+    return `
 insert into scheduler.Task
 (
     TaskUid
@@ -71,20 +68,18 @@ insert into scheduler.Task
    ,IsDeleted
    ,NotifyLevelEventlog
 )
-
- 
-
 select '${TaskUid}' as TaskUid,
       '${Identifier}' as Identifier,
       '${TSQLCommand}' as TSQLCommand,
       '${StartTime}' as StartTime,
-      '${Frequency}' as Frequency,
-      '${FrequencyInterval}' as FrequencyInterval,
+      ${Frequency} as Frequency,
+      ${FrequencyInterval} as FrequencyInterval,
       '${NotifyOnFailureOperator}' as NotifyOnFailureOperator,
-      '${IsNotifyOnFailure}' as IsNotifyOnFailure,
-      '${IsDeleted}' as IsDeleted,
-      '${IsEnabled}' as IsEnabled,
-      '${NotifyLevelEventLog}' as NotifyLevelEventLog`;
+      ${IsNotifyOnFailure ? 1 : 0} as IsNotifyOnFailure,
+      ${IsDeleted ? 1 : 0} as IsDeleted,
+      ${IsEnabled ? 1 : 0} as IsEnabled,
+      '${NotifyLevelEventLog}' as NotifyLevelEventLog
+`;
   };
 
   return (
@@ -160,7 +155,7 @@ select '${TaskUid}' as TaskUid,
                   className="my-2 bg-blue-400 text-white hover:bg-blue-600 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   disabled={isSubmitting}
                 >
-                  Create JSON
+                  Create JSON and SQL
                 </button>
                 {jsonTask && (
                   <button
