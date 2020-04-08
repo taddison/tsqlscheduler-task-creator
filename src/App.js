@@ -53,7 +53,38 @@ function App() {
       IsEnabled,
       NotifyLevelEventLog,
     } = values;
-    return `select '${TaskUid}' as TaskUid`;
+      return `
+
+ 
+
+insert into scheduler.Task
+(
+    TaskUid
+   ,Identifier
+   ,TSQLCommand
+   ,StartTime
+   ,Frequency
+   ,FrequencyInterval
+   ,NotifyOnFailureOperator
+   ,IsNotifyOnFailure
+   ,IsEnabled
+   ,IsDeleted
+   ,NotifyLevelEventlog
+)
+
+ 
+
+select '${TaskUid}' as TaskUid,
+      '${Identifier}' as Identifier,
+      '${TSQLCommand}' as TSQLCommand,
+      '${StartTime}' as StartTime,
+      '${Frequency}' as Frequency,
+      '${FrequencyInterval}' as FrequencyInterval,
+      '${NotifyOnFailureOperator}' as NotifyOnFailureOperator,
+      '${IsNotifyOnFailure}' as IsNotifyOnFailure,
+      '${IsDeleted}' as IsDeleted,
+      '${IsEnabled}' as IsEnabled,
+      '${NotifyLevelEventLog}' as NotifyLevelEventLog`;
   };
 
   return (
