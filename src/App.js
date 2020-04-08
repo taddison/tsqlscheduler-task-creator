@@ -53,8 +53,7 @@ function App() {
       IsEnabled,
       NotifyLevelEventLog,
     } = values;
-    return `
-insert into scheduler.Task
+    return `insert into scheduler.Task
 (
     TaskUid
    ,Identifier
