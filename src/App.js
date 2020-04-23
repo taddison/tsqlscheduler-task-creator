@@ -75,8 +75,8 @@ select '${TaskUid}' as TaskUid,
       ${FrequencyInterval} as FrequencyInterval,
       '${NotifyOnFailureOperator}' as NotifyOnFailureOperator,
       ${IsNotifyOnFailure ? 1 : 0} as IsNotifyOnFailure,
-      ${IsDeleted ? 1 : 0} as IsDeleted,
       ${IsEnabled ? 1 : 0} as IsEnabled,
+      ${IsDeleted ? 1 : 0} as IsDeleted,
       '${NotifyLevelEventLog}' as NotifyLevelEventLog
 `;
   };
